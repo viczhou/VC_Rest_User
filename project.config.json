@@ -10,7 +10,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "1.9.94",
 	"appid": "wx84d3339d9842ade6",
-	"projectname": "VC_Rust",
+	"projectname": "VC_Rust_User",
 	"isGameTourist": false,
 	"condition": {
 		"search": {

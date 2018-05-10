@@ -1,12 +1,31 @@
 {
-  "pages":[
-    "pages/index/index",
-    "pages/logs/logs"
-  ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
-  }
+    "pages": [
+        "pages/index/index",
+        "pages/setting/setting"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarTitleText": "vc点餐",
+        "navigationBarBackgroundColor": "#427eec",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#f8f8f8"
+    },
+    "tabBar": {
+        "selectedColor":"#1aad19",
+        "color":"#8a8a8a",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "菜单",
+                "iconPath": "/images/menu.png",
+                "selectedIconPath": "/images/menu_selected.png"
+            },
+            {
+                "pagePath": "pages/setting/setting",
+                "text": "我的",
+                "iconPath": "/images/setting.png",
+                "selectedIconPath": "/images/setting_selected.png"
+            }
+        ]
+    }
 }

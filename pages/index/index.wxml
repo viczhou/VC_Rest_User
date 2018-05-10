@@ -1,13 +1,76 @@
-<!--index.wxml-->
-<view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+<view class='menu_list'>
+    <scroll-view style='height:100%' scroll-y>
+        <block wx:for="{{menu_data}}" wx:key="{{*this}}">
+            <input class="{{index == flag ? 'menu_data_active' : 'menu_data'}}" bindtap='menuClick' data-idx='{{index}}' value="{{item.menu_name}}" disabled />
+        </block>
+    </scroll-view>
+
+</view>
+
+<view class='food_list'>
+    <scroll-view style='height:100%' scroll-y>
+        <block wx:for="{{all_food[flag]}}" wx:key="{{*this}}">
+            <view class=" {{index == 0 ? 'menu-food border-top' : 'menu-food'}}">
+                <image src="{{item.foodImg}}" class="menu-image" />
+                <view class="menu-title">{{item.foodName}}</view>
+                <view class="menu-price">￥{{item.foodPrice}}</view>
+
+                <view class="stepper_" wx:if="{{foodListId[flag][index] == 0}}" bindtap="addImg" data-id='{{index}}'>
+                    <image src='/images/add.png' class="ste_img"></image>
+                </view>
+
+                <view class="stepper" wx:else>
+                    <!-- 减号 -->
+                    <text class="{{foodListId[flag][index] <= 0 ? 'disabled': 'normal'}}" bindtap="bindMinus" data-id='{{index}}'>-</text>
+                    <!-- 数值 -->
+                    <input type="number" data-id='{{index}}' bindchange="bindManual" value="{{foodListId[flag][index]}}" />
+                    <!-- 加号 -->
+                    <text class="normal" bindtap="bindPlus" data-id='{{index}}'>+</text>
+                </view>
+            </view>
+        </block>
+    </scroll-view>
+</view>
+
+<view class='cate'>
+    <view bindtap='cateClick' style="position:absolute;width:100%;height:100%">
+        <image class="cateImg" src="{{cateImg}}"></image>
+
+        <view class="totalMoney" wx:if="{{redhot != 0}}">￥ {{totalMoney}}</view>
+        <view class="count" wx:if="{{redhot != 0}}">共 {{redhot}} 样</view>
+        <view class="count" wx:else style="bottom:15px">未选择</view>
+        <view class="weui-badge" style="position:absolute;left:70px;top:-22px;z-index:1000;" wx:if="{{redhot != 0}}">{{redhot}}</view>
+    </view>
+    <view class='confirm'>下单</view>
+
+
+</view>
+
+<view bindtap="maintap" wx:if="{{showdetail}}" style="z-index:101;position:absolute;top:0;background:rgba(0,0,0,0.2);width:100%;height:calc(100% - 50px)"></view>
+<view class='cate-detail' wx:if="{{showdetail}}" style="z-index:102">
+    <view style="padding:10px 20px;background-color:#eceff1;">
+        <view style="border-left:3px solid #427eec;color:#666 ;padding-left:14px;">购物车</view>
+    </view>
+    <view style="overflow: auto; height:auto;max-height:300px;">
+        <block wx:for="{{foodListId}}" wx:for-index="i" wx:key="-*this">
+            <block wx:for="{{item}}" wx:for-item="value" wx:for-index="j" wx:key="{{all_food[i][j].id}}">
+                <block wx:if="{{value != 0}}">
+                    <view class='detail-item'>
+
+                        <view style="display:inline-block;position:absolute;top:15px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:50%">{{all_food[i][j].foodName}}</view>
+                        <view style="display:inline-block;position:absolute;right:100px;top:15px;">￥ {{all_food[i][j].foodPrice * foodListId[i][j]}}</view>
+
+                        <view class="stepper" style="display:inline-block;top:15px;right:0">
+                            <!-- 减号 -->
+                            <text class="{{foodListId[i][j] <= 0 ? 'disabled': 'normal'}}" bindtap="bindMinus" data-flag='{{i}}' data-id='{{j}}'>-</text>
+                            <!-- 数值 -->
+                            <input type="number" data-flag='{{i}}' data-id='{{j}}' bindchange="bindManual" value="{{foodListId[i][j]}}" />
+                            <!-- 加号 -->
+                            <text class="normal" bindtap="bindPlus" data-flag='{{i}}' data-id='{{j}}'>+</text>
+                        </view>
+                    </view>
+                </block>
+            </block>
+        </block>
+    </view>
 </view>
