@@ -41,7 +41,7 @@
         <view class="count" wx:else style="bottom:15px">未选择</view>
         <view class="weui-badge" style="position:absolute;left:70px;top:-22px;z-index:1000;" wx:if="{{redhot != 0}}">{{redhot}}</view>
     </view>
-    <view class='confirm'>下单</view>
+    <view class='confirm' bindtap='confirm'>下单</view>
 
 
 </view>

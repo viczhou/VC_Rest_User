@@ -9,7 +9,7 @@ Page({
         cateImg: "/images/cate.png",
         redhot: 0,
         totalMoney: 0,
-        showdetail:false
+        showdetail: false
     },
     openConfirm: function () {
         let that = this
@@ -125,7 +125,7 @@ Page({
                                         all_food[0] = res.data.data
 
                                         that.setData({
-                                            
+
                                             foodListId: foodListId,
                                             all_food: all_food
                                         })
@@ -177,7 +177,7 @@ Page({
                         menu_id: this.data.menu_data[this.data.flag].menu_id
                     },
                     success: function (res) {
-               
+
                         all_food[e.currentTarget.dataset.idx] = res.data.data
                         if (res.data.msg == 0) {
                             let foodListId = that.data.foodListId
@@ -189,14 +189,14 @@ Page({
                                 foodListId[e.currentTarget.dataset.idx] = arr
 
                                 this.setData({
-                                  
+
                                     foodListId: foodListId,
                                     all_food: all_food
                                 })
                             } else {
 
                                 this.setData({
-                           
+
                                     all_food: all_food
                                 })
                             }
@@ -221,14 +221,14 @@ Page({
     },
     /* 点击减号 */
     bindMinus: function (e) {
-        
+
         let index = e.currentTarget.dataset.id
         let data = this.data.foodListId
         let f = this.data.flag
-        if (e.currentTarget.dataset.flag != undefined){
+        if (e.currentTarget.dataset.flag != undefined) {
             f = e.currentTarget.dataset.flag
         }
-        var num = data[this.data.flag][index];
+        var num = data[f][index];
         let totalMoney = this.data.totalMoney
         totalMoney -= this.data.all_food[f][index].foodPrice
 
@@ -352,15 +352,40 @@ Page({
             totalMoney: totalMoney
         })
     },
-    cateClick:function(){
+    cateClick: function () {
         let show = this.data.showdetail
         this.setData({
             showdetail: !show
         })
     },
-    maintap:function(){
+    maintap: function () {
         this.setData({
             showdetail: false
         })
+    },
+    confirm: function () {
+        let cate = []
+        let item
+        for (let i = 0; i < this.data.foodListId.length; i++) {
+            for (let j = 0; j < this.data.foodListId[i].length; j++) {
+                if (this.data.foodListId[i][j] != 0) {
+                    item = {}
+                    item['id'] = this.data.all_food[i][j].id
+                    item['count'] = this.data.foodListId[i][j]
+
+                    cate.push(item)
+                }
+            }
+        }
+        if (cate != [] && cate != null && cate != '') {
+            wx.switchTab({
+                url: '/pages/setting/setting'
+            })
+        } else {
+            wx.showToast({
+                title: '请先点单',
+                icon:'none'
+            })
+        }
     }
 })  
