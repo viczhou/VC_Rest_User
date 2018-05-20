@@ -33,22 +33,21 @@ Page({
         });
     },
     onShow: function () {
-        wx.getUserInfo({
-            fail: function () {
-                wx.getSetting({
-                    success: function (res) {
-                        if (!res.authSetting['scope.userInfo']) {
-                            this.openConfirm()
-                        }
-                    }.bind(this)
-                })
-            }.bind(this)
-        })
+        // wx.getUserInfo({
+        //     fail: function () {
+        //         wx.getSetting({
+        //             success: function (res) {
+        //                 if (!res.authSetting['scope.userInfo']) {
+        //                     //this.openConfirm()
+        //                 }
+        //             }.bind(this)
+        //         })
+        //     }.bind(this)
+        // })
     },
     onLoad: function (opt) {
         let that = this
         wx.login({
-
             success: function (res) {
                 let js_code = res.code
                 console.log(js_code)
@@ -71,7 +70,7 @@ Page({
                         wx.setStorageSync("user_id", user_id)
 
                         //请求菜单
-                        let shop_id = 9 // opt.xxxxxxx
+                        let shop_id = 1 // opt.xxxxxxx
                         let table = 1 // opt.xxxxx
 
                         wx.setStorage({
@@ -104,33 +103,35 @@ Page({
                                     foodListId: foodListId,
                                     all_food: foodListId
                                 })
+                                console.log(res.data.menu)
+                                if (that.data.menu_data.length > 0) {
+                                    wx.request({
+                                        url: 'https://viczhou.cn/vc_rest/food/getFood',
+                                        method: 'POST',
+                                        header: {
+                                            'content-type': 'application/x-www-form-urlencoded' // 默认值
+                                        },
+                                        data: {
+                                            menu_id: that.data.menu_data[0].menu_id
+                                        },
+                                        success: function (res) {
+                                            let arr = Array.apply(null, Array(res.data.data.length)).map(function (item, i) {
+                                                return 0;
+                                            });
+                                            let foodListId = that.data.foodListId
+                                            foodListId[0] = arr
 
-                                wx.request({
-                                    url: 'https://viczhou.cn/vc_rest/food/getFood',
-                                    method: 'POST',
-                                    header: {
-                                        'content-type': 'application/x-www-form-urlencoded' // 默认值
-                                    },
-                                    data: {
-                                        menu_id: that.data.menu_data[0].menu_id
-                                    },
-                                    success: function (res) {
-                                        let arr = Array.apply(null, Array(res.data.data.length)).map(function (item, i) {
-                                            return 0;
-                                        });
-                                        let foodListId = that.data.foodListId
-                                        foodListId[0] = arr
+                                            let all_food = that.data.all_food
+                                            all_food[0] = res.data.data
 
-                                        let all_food = that.data.all_food
-                                        all_food[0] = res.data.data
+                                            that.setData({
 
-                                        that.setData({
-
-                                            foodListId: foodListId,
-                                            all_food: all_food
-                                        })
-                                    }
-                                })
+                                                foodListId: foodListId,
+                                                all_food: all_food
+                                            })
+                                        }
+                                    })
+                                }
                             }
                         })
 
@@ -378,13 +379,44 @@ Page({
             }
         }
         if (cate != [] && cate != null && cate != '') {
-            wx.switchTab({
-                url: '/pages/setting/setting'
+            wx.request({
+                url: 'https://viczhou.cn/vc/BuildOrder',
+                method: 'POST',
+                header: {
+                    'content-type': 'application/x-www-form-urlencoded' // 默认值
+                },
+                data: {
+                    detail: JSON.stringify(cate),
+                    shop_id: wx.getStorageSync('shop_id'),
+                    user_id: wx.getStorageSync('user_id'),
+                    table: 1,
+                    order_price: this.data.totalMoney
+                },
+                success: function (res) {
+                    let foodListId = this.data.foodListId
+                    for (let i = 0; i < foodListId.length; i++) {
+                        for (let j = 0; j < foodListId[i].length; j++) {
+                            foodListId[i][j] = 0
+                        }
+                    }
+                    if (res.data.msg == 0) {
+                        this.setData({
+                            totalMoney: 0,
+                            redhot: 0,
+                            foodListId: foodListId
+                        })
+
+                        wx.switchTab({
+                            url: '/pages/setting/setting?order_id=' + res.data.order_id
+                        })
+                    }
+                }.bind(this)
             })
+
         } else {
             wx.showToast({
                 title: '请先点单',
-                icon:'none'
+                icon: 'none'
             })
         }
     }

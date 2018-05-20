@@ -9,6 +9,7 @@
 
 <view class='food_list'>
     <scroll-view style='height:100%' scroll-y>
+        <view wx:if="{{all_food[flag].length ==0}}" style="text-align:center;color:#d9d9d9;padding-top:100px; box-sizing: border-box">该分类下无菜品</view>
         <block wx:for="{{all_food[flag]}}" wx:key="{{*this}}">
             <view class=" {{index == 0 ? 'menu-food border-top' : 'menu-food'}}">
                 <image src="{{item.foodImg}}" class="menu-image" />
