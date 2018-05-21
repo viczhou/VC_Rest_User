@@ -76,3 +76,5 @@
         </view>
     </view>
 </view>
+
+<modal title="确定申请退单？" hidden="{{back}}"  confirm-text="确定" cancel-text="取消" bindconfirm="back_confirm" bindcancel="back_cancel" ></modal>

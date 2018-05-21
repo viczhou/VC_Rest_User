@@ -66,8 +66,23 @@ Page({
                         console.log(res.data)
 
                         //请求保存或查询user_id
-                        let user_id = 1
-                        wx.setStorageSync("user_id", user_id)
+                        wx.request({
+                            url: 'https://viczhou.cn/vc_rest/user/check',
+                            header: {
+                                'content-type': 'application/x-www-form-urlencoded'
+                            },
+                            method: 'POST',
+                            data: {
+                                open_id: res.data.openid
+                            },
+                            success: function (e) {
+                                if (e.data.msg == 0) {
+               
+                                    wx.setStorageSync("user_id", e.data.user_id)
+
+                                }
+                            }
+                        })
 
                         //请求菜单
                         let shop_id = 1 // opt.xxxxxxx
@@ -103,7 +118,7 @@ Page({
                                     foodListId: foodListId,
                                     all_food: foodListId
                                 })
-                                console.log(res.data.menu)
+                                //console.log(res.data.menu)
                                 if (that.data.menu_data.length > 0) {
                                     wx.request({
                                         url: 'https://viczhou.cn/vc_rest/food/getFood',
